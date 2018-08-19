@@ -18,7 +18,7 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements: List[str] = []
+requirements: List[str] = ['local_keychain_utils']
 
 setup_requirements: List[str] = []
 
@@ -123,4 +123,5 @@ setup(
         'typesclean': MypyCleanCommand,
         'types': MypyCommand,
     },
+    scripts=['bin/with-op'],
 )

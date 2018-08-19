@@ -1,0 +1,32 @@
+#!/bin/bash -e
+
+team=$(jq -r .accounts[0].shorthand ~/.op/config)
+email=$(jq -r .accounts[0].email ~/.op/config)
+account_alias="${team:?}/${email:?}"
+session_varname="OP_SESSION_${team:?}"
+
+if session=$(local-keychain-get 1password "${account_alias:?}")
+then
+  declare "${session_varname:?}"="${session:?}"
+  export "${session_varname:?}"
+  if ! op get account >/dev/null
+  then
+    # session must have expired
+    declare "${session_varname:?}"=
+
+    local-keychain-clear 1password "${account_alias:?}"
+  fi
+fi
+
+if [ -z "${!session_varname}" ]
+then
+  eval "$(op signin "${team:?}")"
+  if [ -z "${!session_varname}" ]
+  then
+    exit 1
+  fi
+
+  local-keychain-store 1password "${account_alias:?}" <<< "${!session_varname}" || true
+fi
+
+exec "$@"
