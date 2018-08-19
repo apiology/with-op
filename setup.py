@@ -103,7 +103,8 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
     ],
-    description="Script to stash 1Password command-line tool credentials into local keychain",
+    description=("Script to stash 1Password command-line tool credentials "
+                 "into local keychain"),
     install_requires=requirements,
     license="MIT license",
     long_description=readme + '\n\n' + history,
