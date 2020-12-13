@@ -1,6 +1,6 @@
 pip==18.0
 bumpversion==0.5.3
-wheel==0.31.1
+wheel==0.36.2
 watchdog==1.0.1
 flake8==3.5.0
 tox==3.2.1
@@ -10,4 +10,4 @@ twine==1.11.0
 
 
 lxml==4.2.4
-mypy==0.620
+mypy==0.790
