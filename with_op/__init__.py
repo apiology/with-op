@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """Top-level package for with-op script."""
 
 __author__ = """Vince Broz"""

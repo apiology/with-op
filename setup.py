@@ -94,6 +94,7 @@ class QualityCommand(Command):
 setup(
     author="Vince Broz",
     author_email='vince@broz.cc',
+    python_requires='>=3.6',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
@@ -102,6 +103,8 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
     ],
     description=("Script to stash 1Password command-line tool credentials "
                  "into local keychain"),
@@ -111,7 +114,7 @@ setup(
     include_package_data=True,
     keywords='with_op',
     name='with_op',
-    packages=find_packages(include=['with_op']),
+    packages=find_packages(include=['with_op', 'with_op.*']),
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,

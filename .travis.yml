@@ -1,4 +1,4 @@
-# Config file for automatic testing at travis-ci.org
+# Config file for automatic testing at travis-ci.com
 
 language: python
 matrix:
@@ -31,4 +31,4 @@ deploy:
   on:
     tags: true
     repo: apiology/with_op
-    python: 3.6
+    python: 3.8
