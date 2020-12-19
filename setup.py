@@ -18,7 +18,10 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements: List[str] = ['local_keychain_utils']
+requirements: List[str] = [
+    'local_keychain_utils',
+    'prompt_for_password',
+]
 
 setup_requirements: List[str] = []
 
