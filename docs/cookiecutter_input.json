@@ -1,0 +1,17 @@
+{
+    "_template": "https://github.com/apiology/cookiecutter-pypackage/",
+    "add_pyup_badge": "y",
+    "command_line_interface": "Argparse",
+    "create_author_file": "y",
+    "email": "vince@broz.cc",
+    "full_name": "Vince Broz",
+    "github_username": "apiology",
+    "open_source_license": "MIT license",
+    "project_name": "with-op script",
+    "project_short_description": "Script to stash 1Password command-line tool credentials into local keychain",
+    "project_slug": "with_op",
+    "pypi_username": "apiology",
+    "use_pypi_deployment_with_travis": "y",
+    "use_pytest": "n",
+    "version": "0.1.0"
+}

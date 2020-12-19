@@ -7,7 +7,7 @@ with-op script
         :target: https://pypi.python.org/pypi/with_op
 
 .. image:: https://img.shields.io/travis/apiology/with_op.svg
-        :target: https://travis-ci.org/apiology/with_op
+        :target: https://travis-ci.com/apiology/with_op
 
 .. image:: https://readthedocs.org/projects/with-op/badge/?version=latest
         :target: https://with-op.readthedocs.io/en/latest/?badge=latest
