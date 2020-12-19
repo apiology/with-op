@@ -20,7 +20,8 @@ fi
 
 if [ -z "${!session_varname}" ]
 then
-  eval "$(op signin "${team:?}")"
+  my_password="$(prompt-for-password --prompt "Password:" "Please enter your 1Password master password")"
+  eval "$(op signin "${team:?}" <<< "${my_password:?}")"
   if [ -z "${!session_varname}" ]
   then
     exit 1
