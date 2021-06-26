@@ -3,14 +3,23 @@
 
 """The setup script."""
 
-from setuptools import setup, find_packages
-import distutils
-from distutils.cmd import Command
-import distutils.command.clean
-from distutils.dir_util import remove_tree
-import subprocess
+from decimal import Decimal
 import os
-from typing import List, Tuple, Optional
+import os.path
+from typing import List
+
+# This must be above distutils, despite flake8's opinions.  Otherwise,
+# this diagnostic is emitted:
+
+# UserWarning: Distutils was imported before Setuptools. This usage is
+# discouraged and may exhibit undesirable behaviors or errors. Please
+# use Setuptools' objects directly or at least import Setuptools
+# first.
+from setuptools import find_packages, setup
+
+
+from distutils.cmd import Command  # noqa: I100
+
 
 with open('README.rst') as readme_file:
     readme = readme_file.read()
@@ -23,75 +32,71 @@ requirements: List[str] = [
     'prompt_for_password',
 ]
 
-setup_requirements: List[str] = []
-
-test_requirements: List[str] = []
+test_requirements: List[str] = ['pytest>=3']
 
 
-class MypyCleanCommand(Command):
-    """Regular clean plus mypy cache"""
-
-    description = 'Run mypy on source code'
-    user_options: List[Tuple[str, Optional[str], str]] = []
-
-    def initialize_options(self) -> None:
-        pass
-
-    def finalize_options(self) -> None:
-        pass
-
-    def run(self) -> None:
-        if os.path.exists('.mypy_cache'):
-            remove_tree('.mypy_cache')
-
-
-class MypyCommand(Command):
-    description = 'Run mypy on source code'
-    user_options: List[Tuple[str, Optional[str], str]] = []
-
-    def initialize_options(self) -> None:
-        pass
+# From https://github.com/bluelabsio/records-mover/blob/master/setup.py
+class CoverageRatchetCommand(Command):
+    description = 'Run coverage ratchet'
+    user_options = []  # type: ignore
+    coverage_file: str
+    coverage_source_file: str
+    coverage_url: str
+    type_of_coverage: str
 
     def finalize_options(self) -> None:
         pass
 
     def run(self) -> None:
         """Run command."""
-        command = ['mypy', '--html-report', 'types/coverage', '.']
-        self.announce(
-            'Running command: %s' % str(command),
-            level=distutils.log.INFO)  # type: ignore
-        subprocess.check_call(command)
+        import xml.etree.ElementTree as ET
+
+        tree = ET.parse(self.coverage_source_file)
+        new_coverage = Decimal(tree.getroot().attrib["line-rate"]) * 100
+
+        if not os.path.exists(self.coverage_file):
+            with open(self.coverage_file, 'w') as f:
+                f.write('0')
+
+        with open(self.coverage_file, 'r') as f:
+            high_water_mark = Decimal(f.read())
+
+        if new_coverage < high_water_mark:
+            raise Exception(
+                f"{self.type_of_coverage} coverage used to be {high_water_mark}; "
+                f"down to {new_coverage}%.  Fix by viewing '{self.coverage_url}'")
+        elif new_coverage > high_water_mark:
+            with open(self.coverage_file, 'w') as f:
+                f.write(str(new_coverage))
+            print(f"Just ratcheted coverage up to {new_coverage}%")
+        else:
+            print(f"Code coverage steady at {new_coverage}%")
 
 
-class QualityCommand(Command):
-    quality_target: Optional[str]
-
-    description = 'Run quality gem on source code'
-    user_options = [
-        # The format is (long option, short option, description).
-        ('quality-target=',
-         None,
-         'particular quality tool to run (default: all)')
-    ]
-
+class TestCoverageRatchetCommand(CoverageRatchetCommand):
     def initialize_options(self) -> None:
         """Set default values for options."""
-        # Each user option must be listed here with their default value.
-        self.quality_target = None
+        self.type_of_coverage = 'Test'
+        self.coverage_url = 'cover/index.html'
+        self.coverage_file = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            'metrics',
+            'coverage_high_water_mark'
+        )
+        self.coverage_source_file = "coverage.xml"
 
-    def finalize_options(self) -> None:
-        pass
 
-    def run(self) -> None:
-        """Run command."""
-        command = ['./quality.sh']
-        if self.quality_target:
-            command.append(self.quality_target)
-        self.announce(
-            'Running command: %s' % str(command),
-            level=distutils.log.INFO)  # type: ignore
-        subprocess.check_call(command)
+class MypyCoverageRatchetCommand(CoverageRatchetCommand):
+    def initialize_options(self) -> None:
+        """Set default values for options."""
+        self.type_of_coverage = 'Mypy'
+        self.coverage_url = 'typecover/index.html'
+        self.coverage_file = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            'metrics',
+            'mypy_high_water_mark'
+        )
+        self.coverage_source_file = "typecover/cobertura.xml"
 
 
 setup(
@@ -108,26 +113,25 @@ setup(
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
     ],
-    description=("Script to stash 1Password command-line tool credentials "
-                 "into local keychain"),
+    description="Script to stash 1Password command-line tool credentials into local keychain",  # noqa: E501
+    cmdclass={
+        'coverage_ratchet': TestCoverageRatchetCommand,
+        'mypy_ratchet': MypyCoverageRatchetCommand,
+    },
     install_requires=requirements,
     license="MIT license",
     long_description=readme + '\n\n' + history,
+    long_description_content_type='text/x-rst',
     include_package_data=True,
     keywords='with_op',
     name='with_op',
-    packages=find_packages(include=['with_op', 'with_op.*']),
-    setup_requires=setup_requirements,
+    packages=find_packages(include=['with_op',
+                                    'with_op.*']),
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/apiology/with_op',
     version='1.1.1',
     zip_safe=False,
-    cmdclass={
-        'quality': QualityCommand,
-        'typesclean': MypyCleanCommand,
-        'types': MypyCommand,
-    },
-    scripts=['bin/with-op'],
 )

@@ -1,3 +1,50 @@
+# OSX useful to ignore
+*.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# IntelliJ Idea family of suites
+.idea
+*.iml
+## File-based project format:
+*.ipr
+*.iws
+## mpeltonen/sbt-idea plugin
+.idea_modules/
+
+# IDE settings
+.vscode/
+
+# Editor temp files
+*~
+\#*\#
+
+# Used by Makefile to track what we have and haven't installed
+Gemfile.lock.installed
+requirements_dev.txt.installed
+
+# Installed by fix.sh based on what latest versions are
+/.python-version
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -8,21 +55,16 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-env/
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
+/build/
+/develop-eggs/
+/eggs/
+/.eggs/
+/parts/
+/dist/
+/sdist/
+/wheels/
 *.egg-info/
-.installed.cfg
+/.installed.cfg
 *.egg
 
 # PyInstaller
@@ -36,7 +78,7 @@ pip-log.txt
 pip-delete-this-directory.txt
 
 # Unit test / coverage reports
-htmlcov/
+cover/
 .tox/
 .coverage
 .coverage.*
@@ -99,6 +141,6 @@ ENV/
 # mypy
 .mypy_cache/
 /types/coverage
-
-# IDE settings
-.vscode/
+/.ruby-version
+/.dmypy.json
+/typecover
