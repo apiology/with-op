@@ -20,8 +20,10 @@
 import os
 import sys
 sys.path.insert(0, os.path.abspath('..'))
+from typing import Dict  # noqa: E402
 
-import with_op
+
+import with_op  # noqa: E402
 
 # -- General configuration ---------------------------------------------
 
@@ -47,7 +49,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'with-op script'
-copyright = "2020, Vince Broz"
+copyright = "2020, 2021, Vince Broz"
 author = "Vince Broz"
 
 # The version info for the project you're documenting, acts as replacement
@@ -105,7 +107,7 @@ htmlhelp_basename = 'with_opdoc'
 
 # -- Options for LaTeX output ------------------------------------------
 
-latex_elements = {
+latex_elements: Dict[str, str] = {
     # The paper size ('letterpaper' or 'a4paper').
     #
     # 'papersize': 'letterpaper',
@@ -129,7 +131,7 @@ latex_elements = {
 latex_documents = [
     (master_doc, 'with_op.tex',
      'with-op script Documentation',
-     'Vince Broz', 'manual'),
+     "Vince Broz", 'manual'),
 ]
 
 
@@ -157,6 +159,3 @@ texinfo_documents = [
      'One line description of project.',
      'Miscellaneous'),
 ]
-
-
-
