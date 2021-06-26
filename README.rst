@@ -3,22 +3,17 @@ with-op script
 ==============
 
 
+.. image:: https://circleci.com/gh/apiology/with_op.svg?style=svg
+    :target: https://circleci.com/gh/apiology/with_op
+
 .. image:: https://img.shields.io/pypi/v/with_op.svg
         :target: https://pypi.python.org/pypi/with_op
-
-.. image:: https://img.shields.io/travis/apiology/with_op.svg
-        :target: https://travis-ci.com/apiology/with_op
 
 .. image:: https://readthedocs.org/projects/with-op/badge/?version=latest
         :target: https://with-op.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
-
-.. image:: https://pyup.io/repos/github/apiology/with_op/shield.svg
-     :target: https://pyup.io/repos/github/apiology/with_op/
-     :alt: Updates
-
-
+WARNING: This is not ready for use yet!
 
 Script to stash 1Password command-line tool credentials into local keychain
 
