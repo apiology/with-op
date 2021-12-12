@@ -129,6 +129,7 @@ setup(
     name='with_op',
     packages=find_packages(include=['with_op',
                                     'with_op.*']),
+    scripts=['bin/with-op'],
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/apiology/with_op',
