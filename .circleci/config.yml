@@ -34,7 +34,7 @@ commands:
     steps:
       - checkout
       - restore_cache:
-          key: gems-v4-{{ checksum "Gemfile.lock" }}
+          key: gems-v1-{{ checksum "Gemfile.lock" }}
       - restore_cache:
           key: wheels-v1-{{ checksum "requirements_dev.txt" }}
       - run:
@@ -51,7 +51,7 @@ commands:
               exit 1
             fi
       - save_cache:
-          key: gems-v4-{{ checksum "Gemfile.lock" }}
+          key: gems-v1-{{ checksum "Gemfile.lock" }}
           paths:
             - "vendor/bundle"
       - save_cache:
@@ -81,7 +81,7 @@ commands:
 jobs:
   overcommit:
     docker:
-      - image: apiology/circleci:latest
+      - image: apiology/circleci-python:latest
     steps:
       - when:
           condition:
@@ -96,7 +96,7 @@ jobs:
   build:
     working_directory: ~/with_op
     docker:
-      - image: apiology/circleci:latest
+      - image: apiology/circleci-python:latest
     steps:
       - set_up_environment
       - unless:
@@ -116,6 +116,8 @@ jobs:
             - run_with_languages:
                 label: test
                 command: tox
+    # This seemed to shave 5ish% of the build time off when added
+    resource_class: large
 
 workflows:
   version: 2
@@ -129,6 +131,7 @@ workflows:
                 - main
     jobs:
       - build
+      - overcommit
   overcommit:
     jobs:
       - overcommit
