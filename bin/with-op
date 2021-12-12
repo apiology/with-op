@@ -2,7 +2,13 @@
 
 team=$(jq -r .accounts[0].shorthand ~/.op/config)
 email=$(jq -r .accounts[0].email ~/.op/config)
-account_alias="${team:?}/${email:?}"
+if [ -f ~/.with-op.json ]
+then
+  prefix=$(jq -r .prefix ~/.with-op.json)
+else
+  prefix=
+fi
+account_alias="${prefix?}${team:?}/${email:?}"
 session_varname="OP_SESSION_${team:?}"
 
 if session=$(local-keychain-get 1password "${account_alias:?}")
