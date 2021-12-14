@@ -6,6 +6,7 @@
     "full_name": "Vince Broz",
     "github_username": "apiology",
     "open_source_license": "MIT license",
+    "package_name": "with_op",
     "project_name": "with-op script",
     "project_short_description": "Script to stash 1Password command-line tool credentials into local keychain",
     "project_slug": "with-op",

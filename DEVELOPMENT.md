@@ -35,5 +35,5 @@ git push
 git push --tags
 make release
 git stash pop
-open https://pypi.org/project/with_op
+open https://pypi.org/project/with-op
 ```
