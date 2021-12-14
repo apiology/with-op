@@ -12,7 +12,7 @@ To install with-op script, run this command in your terminal:
 
 .. code-block:: console
 
-    $ pip install with_op
+    $ pip install with-op
 
 This is the preferred method to install with-op script, as it will always install the most recent stable release.
 
@@ -32,13 +32,13 @@ You can either clone the public repository:
 
 .. code-block:: console
 
-    $ git clone git://github.com/apiology/with_op
+    $ git clone git://github.com/apiology/with-op
 
 Or download the `tarball`_:
 
 .. code-block:: console
 
-    $ curl -OJL https://github.com/apiology/with_op/tarball/main
+    $ curl -OJL https://github.com/apiology/with-op/tarball/main
 
 Once you have a copy of the source, you can install it with:
 
@@ -47,5 +47,5 @@ Once you have a copy of the source, you can install it with:
     $ python setup.py install
 
 
-.. _Github repo: https://github.com/apiology/with_op
-.. _tarball: https://github.com/apiology/with_op/tarball/main
+.. _Github repo: https://github.com/apiology/with-op
+.. _tarball: https://github.com/apiology/with-op/tarball/main
