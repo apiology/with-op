@@ -3,11 +3,11 @@ with-op script
 ==============
 
 
-.. image:: https://circleci.com/gh/apiology/with_op.svg?style=svg
-    :target: https://circleci.com/gh/apiology/with_op
+.. image:: https://circleci.com/gh/apiology/with-op.svg?style=svg
+    :target: https://circleci.com/gh/apiology/with-op
 
-.. image:: https://img.shields.io/pypi/v/with_op.svg
-        :target: https://pypi.python.org/pypi/with_op
+.. image:: https://img.shields.io/pypi/v/with-op.svg
+        :target: https://pypi.python.org/pypi/with-op
 
 .. image:: https://readthedocs.org/projects/with-op/badge/?version=latest
         :target: https://with-op.readthedocs.io/en/latest/?badge=latest
