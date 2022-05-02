@@ -2,6 +2,7 @@
 
 team=$(jq -r .accounts[0].shorthand ~/.op/config)
 email=$(jq -r .accounts[0].email ~/.op/config)
+user_uuid=$(jq -r .accounts[0].userUUID ~/.op/config)
 if [ -f ~/.with-op.json ]
 then
   prefix=$(jq -r .prefix ~/.with-op.json)
@@ -9,13 +10,13 @@ else
   prefix=
 fi
 account_alias="${prefix?}${team:?}/${email:?}"
-session_varname="OP_SESSION_${team:?}"
+session_varname="OP_SESSION_${user_uuid:?}"
 
 if session=$(local-keychain-get 1password "${account_alias:?}")
 then
   declare "${session_varname:?}"="${session:?}"
   export "${session_varname:?}"
-  if ! op get account >/dev/null
+  if ! op account get >/dev/null
   then
     # session must have expired
     declare "${session_varname:?}"=
@@ -27,7 +28,7 @@ fi
 if [ -z "${!session_varname}" ]
 then
   my_password="$(prompt-for-password --prompt "Password:" "Please enter your 1Password master password")"
-  eval "$(op signin "${team:?}" <<< "${my_password:?}")"
+  eval "$(op signin --account "${team:?}" <<< "${my_password:?}")"
   if [ -z "${!session_varname}" ]
   then
     exit 1
