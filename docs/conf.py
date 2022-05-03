@@ -49,7 +49,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'with-op script'
-copyright = "2020, 2021, Vince Broz"
+copyright = "2020-2022, Vince Broz"
 author = "Vince Broz"
 
 # The version info for the project you're documenting, acts as replacement
