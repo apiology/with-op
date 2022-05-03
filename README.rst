@@ -13,7 +13,7 @@ with-op script
         :target: https://with-op.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
-Script to stash 1Password command-line tool credentials into local keychain
+Script to stash 1Password CLI 2.x credentials into local keychain
 
 
 * Free software: MIT license
@@ -23,7 +23,7 @@ Script to stash 1Password command-line tool credentials into local keychain
 Setup
 -----
 
-1. Install `1Password command-line tool <https://support.1password.com/command-line-getting-started/>`_ - `brew cask install 1password-cli`, for instance.
+1. Install `1Password command-line tool <https://developer.1password.com/docs/cli>`_ - `brew install --cask 1password-cli`, for instance.
 2. Install `jq <https://stedolan.github.io/jq/>`_ dependency - `brew install jq`, for instance.
 3. Install `with-op` - `pip3 install with_op`
 4. Invoke: `with-op op get item "My login to some site"`
