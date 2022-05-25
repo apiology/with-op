@@ -1,5 +1,25 @@
 #!/bin/bash -e
 
+if [ "$(uname -s)" == Darwin ]
+then
+    # use faster local utilities to speed up operation;
+    # local-keychain-utils is written in Python and takes around a
+    # third of a second, whereas the direct OS binary is takes 1/0th
+    # of the time to run.
+    local-keychain-get() {
+        security find-generic-password -w -a "${OP_ACCOUNT_ALIAS:?}" 2>/dev/null
+    }
+
+    local-keychain-clear() {
+        security delete-generic-password -a "${OP_ACCOUNT_ALIAS:?}"
+    }
+
+    local-keychain-store() {
+        IFS= read -r password
+        security add-generic-password -s 1password -w "${password}" -a "${OP_ACCOUNT_ALIAS:?}"
+    }
+fi
+
 if [ -z "${OP_TEAM}" ]
 then
     OP_TEAM=$(jq -r .accounts[0].shorthand ~/.op/config)
