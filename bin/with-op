@@ -1,8 +1,12 @@
 #!/bin/bash -e
 
+if [ -z "${OP_TEAM}" ]
+then
+    OP_TEAM=$(jq -r .accounts[0].shorthand ~/.op/config)
+fi
+
 if [ -z "${OP_ACCOUNT_ALIAS}" ]
 then
-    team=$(jq -r .accounts[0].shorthand ~/.op/config)
     email=$(jq -r .accounts[0].email ~/.op/config)
     if [ -f ~/.with-op.json ]
     then
@@ -10,7 +14,7 @@ then
     else
         prefix=
     fi
-    OP_ACCOUNT_ALIAS="${prefix?}${team:?}/${email:?}"
+    OP_ACCOUNT_ALIAS="${prefix?}${OP_TEAM:?}/${email:?}"
 fi
 
 if [ -z "${OP_SESSION_VARNAME}" ]
@@ -35,7 +39,7 @@ fi
 if [ -z "${!OP_SESSION_VARNAME}" ]
 then
   my_password="$(prompt-for-password --prompt "Password:" "Please enter your 1Password master password")"
-  eval "$(op signin --account "${team:?}" <<< "${my_password:?}")"
+  eval "$(op signin --account "${OP_TEAM:?}" <<< "${my_password:?}")"
   if [ -z "${!OP_SESSION_VARNAME}" ]
   then
     exit 1
