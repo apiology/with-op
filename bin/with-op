@@ -1,40 +1,48 @@
 #!/bin/bash -e
 
-team=$(jq -r .accounts[0].shorthand ~/.op/config)
-email=$(jq -r .accounts[0].email ~/.op/config)
-user_uuid=$(jq -r .accounts[0].userUUID ~/.op/config)
-if [ -f ~/.with-op.json ]
+if [ -z "${OP_ACCOUNT_ALIAS}" ]
 then
-  prefix=$(jq -r .prefix ~/.with-op.json)
-else
-  prefix=
+    team=$(jq -r .accounts[0].shorthand ~/.op/config)
+    email=$(jq -r .accounts[0].email ~/.op/config)
+    if [ -f ~/.with-op.json ]
+    then
+        prefix=$(jq -r .prefix ~/.with-op.json)
+    else
+        prefix=
+    fi
+    OP_ACCOUNT_ALIAS="${prefix?}${team:?}/${email:?}"
 fi
-account_alias="${prefix?}${team:?}/${email:?}"
-session_varname="OP_SESSION_${user_uuid:?}"
 
-if session=$(local-keychain-get 1password "${account_alias:?}")
+if [ -z "${OP_SESSION_VARNAME}" ]
 then
-  declare "${session_varname:?}"="${session:?}"
-  export "${session_varname:?}"
+    user_uuid=$(jq -r .accounts[0].userUUID ~/.op/config)
+    OP_SESSION_VARNAME="OP_SESSION_${user_uuid:?}"
+fi
+
+if session=$(local-keychain-get 1password "${OP_ACCOUNT_ALIAS:?}")
+then
+  declare "${OP_SESSION_VARNAME:?}"="${session:?}"
+  export "${OP_SESSION_VARNAME:?}"
   if ! op account get >/dev/null
   then
     # session must have expired
-    declare "${session_varname:?}"=
+    declare "${OP_SESSION_VARNAME:?}"=
 
-    local-keychain-clear 1password "${account_alias:?}"
+    local-keychain-clear 1password "${OP_ACCOUNT_ALIAS:?}"
   fi
 fi
 
-if [ -z "${!session_varname}" ]
+if [ -z "${!OP_SESSION_VARNAME}" ]
 then
   my_password="$(prompt-for-password --prompt "Password:" "Please enter your 1Password master password")"
   eval "$(op signin --account "${team:?}" <<< "${my_password:?}")"
-  if [ -z "${!session_varname}" ]
+  if [ -z "${!OP_SESSION_VARNAME}" ]
   then
     exit 1
   fi
 
-  local-keychain-store 1password "${account_alias:?}" <<< "${!session_varname}" || true
+  local-keychain-store 1password "${OP_ACCOUNT_ALIAS:?}" <<< "${!OP_SESSION_VARNAME}" || true
 fi
+
 
 exec "$@"
