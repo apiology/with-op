@@ -80,6 +80,7 @@ commands:
 
 jobs:
   overcommit:
+    working_directory: ~/with-op
     docker:
       - image: apiology/circleci-python:latest
     steps:

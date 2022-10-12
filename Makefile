@@ -102,6 +102,8 @@ test: ## run tests quickly with the default Python
 test-all: ## run tests on every Python version with tox
 	tox
 
+typecheck: ## validate types in code and configuration
+
 overcommit: ## run precommit quality checks
 	bundle exec overcommit --run
 
@@ -135,8 +137,8 @@ servedocs: docs ## compile the docs watching for changes
 release: dist ## package and upload a release
 	set -e; \
 	new_version=$$(python3 setup.py --version); \
-	twine upload -u $$(with-op op get item 'PyPI - test' --fields username) -p $$(with-op op get item 'PyPI - test' --fields password) dist/with-op-$${new_version:?}.tar.gz -r testpypi; \
-	twine upload -u $$(with-op op get item 'PyPI' --fields username) -p $$(with-op op get item 'PyPI' --fields password) dist/with-op-$${new_version:?}.tar.gz -r pypi
+	twine upload -u __token__ -p $$(with-op op item get 'PyPI - test' --fields api_key) dist/with-op-$${new_version:?}.tar.gz -r testpypi; \
+	twine upload -u __token__ -p $$(with-op op item get 'PyPI' --fields api_key) dist/with-op-$${new_version:?}.tar.gz -r pypi
 
 dist: clean ## builds source and wheel package
 	python setup.py sdist
