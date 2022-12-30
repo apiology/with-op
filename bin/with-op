@@ -43,16 +43,33 @@ then
     OP_SESSION_VARNAME="OP_SESSION_${user_uuid:?}"
 fi
 
-if session=$(local-keychain-get 1password "${OP_ACCOUNT_ALIAS:?}")
+if [ -n "${!OP_SESSION_VARNAME}" ]
 then
-  declare "${OP_SESSION_VARNAME:?}"="${session:?}"
-  export "${OP_SESSION_VARNAME:?}"
+  # Try to use from environment
   if ! op account get >/dev/null
   then
-    # session must have expired
+    # session must have expired, don't try to use it
     declare "${OP_SESSION_VARNAME:?}"=
+  fi
+fi
 
-    local-keychain-clear 1password "${OP_ACCOUNT_ALIAS:?}"
+if [ -z "${!OP_SESSION_VARNAME}" ]
+then
+  # Try to fetch from keychain
+  if session=$(local-keychain-get 1password "${OP_ACCOUNT_ALIAS:?}")
+  then
+    declare "${OP_SESSION_VARNAME:?}"="${session:?}"
+    export "${OP_SESSION_VARNAME:?}"
+    if ! op account get >/dev/null
+    then
+      # session must have expired
+      declare "${OP_SESSION_VARNAME:?}"=
+
+      local-keychain-clear 1password "${OP_ACCOUNT_ALIAS:?}"
+    fi
+  else
+    # Don't pay attention to anything handed to us at this point - it wasn't
+    declare "${OP_SESSION_VARNAME:?}"=
   fi
 fi
 
