@@ -45,10 +45,12 @@ typecoverage: typecheck ## Run type checking and then ratchet coverage in metric
 clean-mypy: ## Clean out mypy previous results to avoid flaky results
 	@rm -fr .mypy_cache
 
-citypecoverage: typecoverage ## Run type checking, ratchet coverage, and then complain if ratchet needs to be committed
+ratchet-typecoverage: ## Run type checking, ratchet coverage, and then complain if ratchet needs to be committed
 	@echo "Looking for un-checked-in type coverage metrics..."
 	@git status --porcelain metrics/mypy_high_water_mark
 	@test -z "$$(git status --porcelain metrics/mypy_high_water_mark)"
+
+citypecoverage: ratchet-typecoverage ## Run type checking, ratchet coverage, and then complain if ratchet needs to be committed
 
 clean: clean-build clean-pyc clean-test clean-mypy clean-coverage ## remove all build, test, coverage and Python artifacts
 
@@ -91,18 +93,16 @@ bundle_install: Gemfile.lock.installed ## Install Ruby dependencies
 lint: ## check style with flake8
 	flake8 with_op tests
 
-test-reports:
-	mkdir test-reports
-
-citest: test-reports test ## Run unit tests from CircleCI
-
 test: ## run tests quickly with the default Python
-	@coverage run --source with_op -m pytest
+	@pytest --cov=with_op tests/
 
 test-all: ## run tests on every Python version with tox
 	tox
 
-typecheck: ## validate types in code and configuration
+test-reports:
+	mkdir test-reports
+
+citest: test-reports test ## Run unit tests from CircleCI
 
 overcommit: ## run precommit quality checks
 	bundle exec overcommit --run
@@ -112,16 +112,19 @@ quality: overcommit ## run precommit quality checks
 clean-coverage: ## Clean out previous output of test coverage to avoid flaky results from previous runs
 	@rm -fr .coverage
 
-coverage: test ## check code coverage and then ratchet coverage in metrics/coverage_high_water_mark
+coverage: test report-coverage ## check code coverage
+
+report-coverage: test ## Report summary of coverage to stdout, and generate HTML, XML coverage report
 	@coverage report -m
 	@coverage html --directory=cover
 	@coverage xml
-	@python setup.py coverage_ratchet
 
-cicoverage: coverage ## check code coverage, ratchet coverage, and then complain if ratchet needs to be committed
-	@echo "Looking for un-checked-in unit test coverage metrics..."
-	@git status --porcelain metrics/coverage_high_water_mark
-	@test -z "$$(git status --porcelain metrics/coverage_high_water_mark)"
+report-coverage-to-codecov: report-coverage ## use codecov.io for PR-scoped code coverage reports
+	@curl -Os https://uploader.codecov.io/latest/linux/codecov
+	@chmod +x codecov
+	@./codecov --file coverage.xml --nonZero
+
+cicoverage: report-coverage-to-codecov ratchet-coverage ## check code coverage, ratchet coverage, and then complain if ratchet needs to be committed
 
 docs: ## generate Sphinx HTML documentation, including API docs
 	rm -f docs/with_op.rst

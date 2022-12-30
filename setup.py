@@ -70,19 +70,6 @@ class CoverageRatchetCommand(Command):
             print(f"Code coverage steady at {new_coverage}%")
 
 
-class TestCoverageRatchetCommand(CoverageRatchetCommand):
-    def initialize_options(self) -> None:
-        """Set default values for options."""
-        self.type_of_coverage = 'Test'
-        self.coverage_url = 'cover/index.html'
-        self.coverage_file = os.path.join(
-            os.path.dirname(os.path.abspath(__file__)),
-            'metrics',
-            'coverage_high_water_mark'
-        )
-        self.coverage_source_file = "coverage.xml"
-
-
 class MypyCoverageRatchetCommand(CoverageRatchetCommand):
     def initialize_options(self) -> None:
         """Set default values for options."""
@@ -113,7 +100,6 @@ setup(
     ],
     description="Script to stash 1Password command-line tool credentials into local keychain",  # noqa: E501
     cmdclass={
-        'coverage_ratchet': TestCoverageRatchetCommand,
         'mypy_ratchet': MypyCoverageRatchetCommand,
     },
     install_requires=requirements,

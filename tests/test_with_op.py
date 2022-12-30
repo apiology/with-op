@@ -6,6 +6,8 @@
 
 import pytest
 
+import with_op
+
 
 @pytest.fixture
 def response():
@@ -17,7 +19,7 @@ def response():
     # return requests.get('https://github.com/audreyr/cookiecutter-pypackage')
 
 
-def test_content(response):
-    """Sample pytest test function with the pytest fixture as an argument."""
-    # from bs4 import BeautifulSoup
-    # assert 'GitHub' in BeautifulSoup(response.content).title.string
+def test_dunders(response):
+    assert with_op.__author__ is not None
+    assert with_op.__email__ is not None
+    assert with_op.__version__ is not None
