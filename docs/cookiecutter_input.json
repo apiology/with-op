@@ -1,4 +1,5 @@
 {
+    "_output_dir": "/Users/broz/src/with-op/.git/cookiecutter",
     "_template": "https://github.com/apiology/cookiecutter-pypackage",
     "command_line_interface": "No command-line interface",
     "create_author_file": "y",

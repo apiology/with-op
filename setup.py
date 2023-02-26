@@ -97,6 +97,7 @@ setup(
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
     ],
     description="Script to stash 1Password command-line tool credentials into local keychain",  # noqa: E501
     cmdclass={
